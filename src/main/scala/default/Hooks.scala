@@ -35,7 +35,10 @@ trait DefaultHooks extends specs.Hooks[Protocol.Data] { this: AkkaEnv =>
             uri = Uri(endpoint),
             method = HttpMethods.POST,
             entity = entity))
-        .map{resp => resp.discardEntityBytes(); println(s"done: $endpoint")}
+        .map { resp =>
+          resp.discardEntityBytes()
+          println(s"done: $endpoint")
+        }
         .recover {
           case exn =>
             println(s"failed webhook: $endpoint")
