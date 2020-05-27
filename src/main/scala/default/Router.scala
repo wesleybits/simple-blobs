@@ -21,8 +21,13 @@ trait DefaultRouter extends specs.Router {
       akka.http.scaladsl.model._
 
     case class RouteError(error: String, message: String)
-    def error(message: String, exn: Throwable): RouteError =
+    private def error(message: String, exn: Throwable): RouteError =
       RouteError(message, exn.getMessage)
+
+    private def printExn(exn: Throwable): Unit = {
+      println(exn.getMessage)
+      exn.printStackTrace
+    }
 
     import akka.http.scaladsl.server._, Directives._
     import HttpMethods._
@@ -32,16 +37,14 @@ trait DefaultRouter extends specs.Router {
         concat(
           get {
             completeOrRecoverWith(controllers.getAllItems()) { exn =>
-              println(exn.getMessage)
-              exn.printStackTrace
+              printExn(exn)
               failWith(exn)
             }
           },
           post {
             entity(as[Data]) { data =>
               completeOrRecoverWith(Future(()).flatMap(_ => controllers.createItem(data))) { exn =>
-                println(exn.getMessage)
-                exn.printStackTrace()
+                printExn(exn)
                 failWith(exn)
               }
             }
@@ -58,8 +61,7 @@ trait DefaultRouter extends specs.Router {
                   case None => throw new RuntimeException(s"Not Found: /item/$id")
                 }
             ){ exn =>
-              println(exn.getMessage)
-              exn.printStackTrace
+              printExn(exn)
               failWith(exn)
             }
           },
@@ -78,8 +80,7 @@ trait DefaultRouter extends specs.Router {
                   case None => throw new RuntimeException(s"Not Found: /item/$id")
                 }
             ){ exn =>
-              println(exn.getMessage)
-              exn.printStackTrace
+              printExn(exn)
               failWith(exn)
             }
           }
