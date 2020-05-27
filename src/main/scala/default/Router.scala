@@ -29,24 +29,25 @@ trait DefaultRouter extends specs.Router {
       exn.printStackTrace
     }
 
-    import akka.http.scaladsl.server._, Directives._
+    import akka.http.scaladsl.server._, Directives._, directives.{CompleteOrRecoverWithMagnet}
     import HttpMethods._
     import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._
+
+    private def completeWithStdHandling(process: => CompleteOrRecoverWithMagnet) =
+      completeOrRecoverWith(process){ exn =>
+        printExn(exn)
+        failWith(exn)
+      }
+
     def routes: Route = concat(
       path("items") {
         concat(
           get {
-            completeOrRecoverWith(controllers.getAllItems()) { exn =>
-              printExn(exn)
-              failWith(exn)
-            }
+            completeWithStdHandling(controllers.getAllItems())
           },
           post {
             entity(as[Data]) { data =>
-              completeOrRecoverWith(Future(()).flatMap(_ => controllers.createItem(data))) { exn =>
-                printExn(exn)
-                failWith(exn)
-              }
+              completeWithStdHandling(controllers.createItem(data))
             }
           }
         )
@@ -54,16 +55,13 @@ trait DefaultRouter extends specs.Router {
       path("item" / Segment) { id =>
         concat(
           get {
-            completeOrRecoverWith(
+            completeWithStdHandling(
               controllers.getItem(id)
                 .map {
                   case Some(item: Data) => item
                   case None => throw new RuntimeException(s"Not Found: /item/$id")
                 }
-            ){ exn =>
-              printExn(exn)
-              failWith(exn)
-            }
+            )
           },
           put {
             entity(as[Data]) { data =>
@@ -73,16 +71,13 @@ trait DefaultRouter extends specs.Router {
             }
           },
           delete {
-            completeOrRecoverWith(
+            completeWithStdHandling(
               controllers.deleteItem(id)
                 .map {
                   case Some(item: Data) => item
                   case None => throw new RuntimeException(s"Not Found: /item/$id")
                 }
-            ){ exn =>
-              printExn(exn)
-              failWith(exn)
-            }
+            )
           }
         )
       }
