@@ -28,22 +28,20 @@ trait DefaultHooks extends specs.Hooks[Protocol.Data] { this: AkkaEnv =>
       case class PostBody(obj: Data, change: ChangeType)
       val body = PostBody(obj = data, change = changeType).asJson.toString
       val entity = HttpEntity(ContentTypes.`application/json`, body)
-      val worker = Http()
+
+      Http()
         .singleRequest(
           HttpRequest(
             uri = Uri(endpoint),
             method = HttpMethods.POST,
             entity = entity))
         .map{resp => resp.discardEntityBytes(); println(s"done: $endpoint")}
-
-      worker.onComplete {
-        case Success(_) => ()
-        case Failure(err) =>
-          println(err.getMessage)
-          err.printStackTrace()
-      }
-
-      worker
+        .recover {
+          case exn =>
+            println(s"failed webhook: $endpoint")
+            println(exn.getMessage)
+            exn.printStackTrace()
+        }
     }
   }
 }
