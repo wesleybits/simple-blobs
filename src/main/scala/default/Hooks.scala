@@ -13,6 +13,14 @@ trait DefaultHooks extends specs.Hooks[Protocol.Data] { this: AkkaEnv =>
     private implicit val classic = system.classicSystem
     private implicit val mat = akka.stream.Materializer(classic)
 
+    import io.circe.{ Encoder, Json }
+    implicit val encodeChangeType = new Encoder[ChangeType] {
+      final def apply(change: ChangeType): Json = change match {
+        case Update => Json.fromString("Update")
+        case Create => Json.fromString("Create")
+        case Delete => Json.fromString("Delete")
+      }
+    }
 
     def call(endpoint: String, data: Data, changeType: ChangeType): Future[Unit] = {
       import io.circe.generic.auto._, io.circe.syntax._
