@@ -57,7 +57,11 @@ trait DefaultRouter extends specs.Router {
                   case Some(item: Data) => item
                   case None => throw new RuntimeException(s"Not Found: /item/$id")
                 }
-            ){ exn => println(exn.getMessage); exn.printStackTrace; failWith(exn) }
+            ){ exn =>
+              println(exn.getMessage)
+              exn.printStackTrace
+              failWith(exn)
+            }
           },
           put {
             entity(as[Data]) { data =>
@@ -73,7 +77,11 @@ trait DefaultRouter extends specs.Router {
                   case Some(item: Data) => item
                   case None => throw new RuntimeException(s"Not Found: /item/$id")
                 }
-            ){ exn => println(exn.getMessage); exn.printStackTrace; failWith(exn) }
+            ){ exn =>
+              println(exn.getMessage)
+              exn.printStackTrace
+              failWith(exn)
+            }
           }
         )
       }
