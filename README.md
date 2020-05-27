@@ -20,7 +20,7 @@ The general schema used throughout the project is:
   "data": "formless JSON blob; anything you want",
   "hooks": [
     "array of URIs to POST change information to."
-  ]
+  ],
   "id": "system managed, it's a UUID that's has no other significance"
 }
 ```
@@ -30,7 +30,8 @@ at your webhook endpoints:
 
 ```json
 {
-  "data": { // same as above; so repeated bellow
+  "data": { 
+    "//": "same as above; so repeated bellow",
     "data": "json blob",
     "hooks": [ "webhooks" ],
     "id": "system-assigned UUID"
