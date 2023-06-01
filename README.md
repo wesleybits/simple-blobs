@@ -1,13 +1,16 @@
 # Simple Blobs
 
-This is a toy project I threw together to better understand how Akka Actors
-changed. Also as an excuse to learn more about Akka HTTP. Also to play around
-with the Cake pattern a little. Feel free to clone it to mess around with other
-repository schemes, or use such specs laid out to mess with composing it with
-other variations on the form.
+These are very simple REST-y CRUD services written in a variety of languages. I
+use this as an exercise to better understand how to to do 2 things:
 
-This is a _very_ simple CRUD server done in a _very_ obtuse way. This is an
-exercise.
+- HTTP service with minimal external dependencies (aside from Scala)
+- Modular decoupling -- to some extent
+
+Currently Simple Globs is implemented in the following languages:
+- Scala2 with Akka and Circe
+- Golang with some UUID lib from Google
+
+All of these are intended to present the same interface.
 
 ## What it does
 
