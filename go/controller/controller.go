@@ -69,20 +69,26 @@ func (c *ItemController) Post(w http.ResponseWriter, r *http.Request) {
 
 func (c *ItemController) Get(w http.ResponseWriter, r *http.Request, id string) {
 	item := c.model.Get(id)
-	enc := json.NewEncoder(w)
 	if item == nil {
 		notfound(w)
 		return
 	}
+	enc := json.NewEncoder(w)
+
 	item.Data.Id = id
 	enc.Encode(item.Data)
 	w.WriteHeader(200)
 }
 
 func (c *ItemController) Put(w http.ResponseWriter, r *http.Request, id string) {
+	if old := c.model.Get(id); old == nil {
+		notfound(w)
+		return
+	}
+
+	var item Item
 	dec := json.NewDecoder(r.Body)
 	enc := json.NewEncoder(w)
-	var item Item
 	dec.Decode(&item)
 	c.model.Update(id, item)
 	item.Id = id

@@ -4,13 +4,15 @@ These are very simple REST-y CRUD services written in a variety of languages. I
 use this as an exercise to better understand how to to do 2 things:
 
 - HTTP service with minimal external dependencies (aside from Scala)
-- Modular decoupling -- to some extent
+- Module decoupling -- to some extent
 
 Currently Simple Globs is implemented in the following languages:
 - Scala2 with Akka and Circe
 - Golang with some UUID lib from Google
 
-All of these are intended to present the same interface.
+All of these are intended to present the same REST interface, which just exposes
+a super-simplified in-memory key/value storage with no mind paid for memory
+efficiency or persistance.
 
 ## What it does
 
@@ -33,7 +35,7 @@ at your webhook endpoints:
 
 ```json
 {
-  "data": { 
+  "data": {
     "//": "same as above; so repeated bellow",
     "data": "json blob",
     "hooks": [ "webhooks" ],

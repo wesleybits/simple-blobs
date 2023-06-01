@@ -1,4 +1,4 @@
-module github.com/wesleybits/go-simple-globs
+module github.com/wesleybits/simple-blobs/go
 
 go 1.19
 
