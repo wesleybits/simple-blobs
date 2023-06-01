@@ -73,8 +73,8 @@ func (c *ItemController) Get(w http.ResponseWriter, r *http.Request, id string) 
 		notfound(w)
 		return
 	}
-	enc := json.NewEncoder(w)
 
+	enc := json.NewEncoder(w)
 	item.Data.Id = id
 	enc.Encode(item.Data)
 	w.WriteHeader(200)
